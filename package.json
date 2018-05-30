@@ -1,21 +1,41 @@
 {
-  "name": "hello-chatconnector",
+  "name": "prototype",
   "version": "1.0.0",
-  "description": "",
+  "description": "Northern Ireland Childrens' rights chatbot protoype",
+  "engines": {
+    "node": "^8.11.1"
+  },
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "azure-publish": "node publish.js"
+    "http-server": "sudo http-server -p 80 --proxy http://localhost:3000/ test/web",
+    "test": "nyc mocha test/system test/dialog test/unit",
+    "watch": "mocha --watch-extensions yaml --watch --reporter min"
   },
-  "author": "",
-  "license": "ISC",
+  "keywords": [],
+  "author": "Keith Maxwell",
+  "license": "Apache-2.0",
   "dependencies": {
-    "botbuilder": "^3.13.1",
-    "botbuilder-azure": "^3.0.4",
-    "restify": "^5.0.0"
+    "botbuilder": "^3.15.0",
+    "botbuilder-azure": "^3.1.0",
+    "bunyan": "^1.8.12",
+    "js-yaml": "^3.11.0",
+    "restify": "^7.2.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "request": "^2.81.0",
-    "zip-folder": "^1.0.0"
+    "bot-tester": "^3.4.5",
+    "chai": "^4.1.2",
+    "express": "^4.16.3",
+    "http-server": "^0.11.1",
+    "mocha": "^5.2.0",
+    "nyc": "^11.8.0",
+    "offline-directline": "^1.2.3",
+    "prettier": "^1.13.0"
+  },
+  "prettier": {
+    "trailingComma": "all"
+  },
+  "nodemonConfig": {
+    "ext": "js,yaml"
   }
 }
