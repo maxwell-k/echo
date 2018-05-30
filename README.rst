@@ -187,7 +187,7 @@ Remove the demo and check that the resource group does not exist:
 
 .. code:: sh
 
-    az group delete --name $resourceGroup
+    az group delete --name $resourceGroup &&
     az group list
 
 Visit https://apps.dev.microsoft.com/#/appList and delete the app.
