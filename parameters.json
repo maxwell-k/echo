@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "zipUrl": {
+            "value": "https://connectorprod.blob.core.windows.net/bot-packages/node.js-abs-webapp_hello-chatconnector.zip"
+        },
+        "kind": {
+            "value": "sdk"
+        },
+        "sku": {
+            "value": "S1"
+        },
+        "createNewStorage": {
+            "value": true
+        },
+        "storageAccountResourceId": {
+            "value": ""
+        },
+        "botEnv": {
+            "value": "prod"
+        },
+        "useAppInsights": {
+            "value": false
+        },
+        "appInsightsLocation": {
+            "value": ""
+        },
+        "createServerFarm": {
+            "value": false
+        },
+        "azureWebJobsBotFrameworkDirectLineSecret": {
+            "value": ""
+        }
+    }
+}
