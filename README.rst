@@ -229,6 +229,8 @@ References
 
 -   https://github.com/projectkudu/kudu/wiki/Continuous-deployment
 -   https://github.com/projectkudu/kudu/wiki/Deployment-credentials
+-   `Christian Liebel's blog post <https://christianliebel.com/2016/05/
+    auto-deploying-to-azure-app-services-from-gitlab/>`__
 
 Originally based on the hello sample from Microsoft:
 
