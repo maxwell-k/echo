@@ -2,22 +2,19 @@
 echo
 ====
 
-A repository to demonstrate GitLab CI/CD and:
+A repository to demonstrate deploying a botbuilder_ chat bot onto Microsoft
+Azure App Service as a platform programmatically.
 
--   `botbuilder <https://github.com/Microsoft/BotBuilder>`__  as a framework
-    with
--   `BotTester <https://github.com/microsoftly/BotTester>`__ for testing,
--   `bunyan <https://github.com/trentm/node-bunyan>`__ for logging and
--   Microsoft Azure App Service as a platform
+.. _botbuilder: https://github.com/Microsoft/BotBuilder
 
-There are four steps in configuring a publicly accessible GitLab repository to
+There are four steps in configuring a GitLab repository to
 deploy onto a Microsoft Azure App Service. The fifth step is optional.
 
 #.  Name: find a suitable unique name
 #.  Register: with Microsoft
 #.  Resource: create resources and deploy the echo bot
 #.  Deploy: code from a git repository and configure automatic deployments
-#.  Remove: destroy any resources that were created during this demo
+#.  Remove: destroy any resources that were created
 
 These instructions assume that the following command line tools are available:
 ``az``, ``curl`` and ``jq``.
@@ -26,16 +23,16 @@ Name
 ----
 
 At least some of these names have to be unique. The following creates unique
-names as "demo-", entity type, "-", and then five random characters.
+names as "prototype-", entity type, "-", and then five random characters.
 
 .. code:: sh
 
     suffix=$(</dev/urandom tr -dc 'a-z' | head -c 5) &&
-    resourceGroup=demo-resource-group-$suffix &&
-    deployment=demo-deployment-$suffix &&
-    bot=demo-bot-$suffix &&
-    plan=demo-plan-$suffix &&
-    storage=demostorage$suffix &&
+    resourceGroup=prototype-resource-group-$suffix &&
+    deployment=prototype-deployment-$suffix &&
+    bot=prototype-bot-$suffix &&
+    plan=prototype-plan-$suffix &&
+    storage=prototypestorage$suffix &&
     unset suffix &&
     printf 'resource group: %s deployment: %s bot: %s\n' \
         $resourceGroup $deployment $bot &&
@@ -72,9 +69,8 @@ Create a resource group:
     az group create --name $resourceGroup --location ukwest &&
     az group list
 
-This group will later be used to delete the resources.
-
-Create an app service plan:
+This group will later be used to delete the resources. Then create an app
+service plan:
 
 .. code:: sh
 
@@ -85,7 +81,7 @@ Create an app service plan:
         --query '[].id|[0]' | tr -d '"'
     ) && echo $planId
 
-Deploy the echo bot:
+Deploy the template echo bot from Microsoft:
 
 .. code:: sh
 
@@ -103,19 +99,26 @@ Deploy the echo bot:
 
 Optionally log into the portal, view the Web App Bot and "Test in Web Chat".
 
-Optionally turn on logging and follow the logs in a terminal:
+For the following optional step you may prefer to  open another terminal.
+Don't forget to copy across the environment variables, which you can display
+with::
+
+    set | grep "='prototype"
+
+Optionally turn on logging and follow the logs in a terminal
 
 .. code:: sh
 
     az webapp log config \
         --name $bot --resource-group $resourceGroup \
-        --web-server-logging filesystem
+        --web-server-logging filesystem &&
     az webapp log tail --name $bot --resource-group $resourceGroup
 
 Deploy
 ------
 
-Configure the Azure web app to deploy from that repository:
+Configure the Azure web app to deploy from a private GitLab repository. The
+command will exit with "Deployment failed".
 
 .. code:: sh
 
@@ -123,13 +126,14 @@ Configure the Azure web app to deploy from that repository:
         --name $bot --resource-group $resourceGroup \
         --branch master \
         --manual-integration \
-        --repo-url git@gitlab.com:keith.maxwell/botops.git \
+        --repo-url git@gitlab.com:keith.maxwell/echo-private.git \
         --repository-type git
 
-Then:
+Then, following the instructions below:
 
--   add the public ssh deploy key to GitLab and
--   configure the web hook URL
+-   add the public ssh deploy key to GitLab so that Azure can access the
+    source code and
+-   configure the web hook URL so that Azure is notified of changes
 
 Deploy key
 ~~~~~~~~~~
@@ -169,10 +173,9 @@ URL:
     printf 'https://$%s:%s@%s.scm.azurewebsites.net/deploy\n' \
         $bot "$password" $bot
 
-
-Start following the log again and test a push event from the above GitLab page.
-You should see a post to ``/deploy``. Keep watching the log and push a commit
-to the repository. Then list the deployments with:
+Further down the GitLab page there is the option to test the web hook with a
+push event. This should show a "202" message in the web browser.
+You can also list the deployments with ``curl`` at the command line:
 
 .. code:: sh
 
@@ -183,7 +186,8 @@ to the repository. Then list the deployments with:
 Remove
 ------
 
-Remove the demo and check that the resource group does not exist:
+Remove all of the resources and check that the resource group no longer
+exists:
 
 .. code:: sh
 
