@@ -48,16 +48,21 @@ Register
 
 #.  Visit https://apps.dev.microsoft.com/#/appList and create an app
     registration, using ``$bot`` as the name
-#.  Note the id and generate a password; no other options are required.
+#.  Note the id and generate a new password; no other options are required.
     Set two environment variables to use these details later::
 
-        appId=
-        password=''
+        appId=<long string under Application Id on web page>
+        appSecret='<password from Generate New Password dialog>'
 
 #.  Optionally remove any delegated permissions.
 
-The Microsoft documentation only supports registering an application through
-the Azure Portal GUI. The quick-start automatically registers an application
+Outside of the Azure web portal, Microsoft only reliably supports registering
+an application through the Azure Portal GUI, see this comment_ on a GitHub
+issue. The quick-start through the Azure web portal automatically registers an
+application.
+
+.. _comment: https://
+    github.com/Microsoft/botbuilder-tools/issues/183#issuecomment-393274244
 
 Resource
 --------
@@ -81,7 +86,7 @@ service plan:
         --query '[].id|[0]' | tr -d '"'
     ) && echo $planId
 
-Deploy the template echo bot from Microsoft:
+Deploy ``node.js-abs-webapp_hello-chatconnector`` from Microsoft:
 
 .. code:: sh
 
@@ -95,7 +100,7 @@ Deploy the template echo bot from Microsoft:
       --parameters "serverFarmId=$planId" \
       --parameters "storageAccountName=$storage" \
       --parameters "appId=$appId" \
-      --parameters "appSecret=$password"
+      --parameters "appSecret=$appSecret"
 
 Optionally log into the portal, view the Web App Bot and "Test in Web Chat".
 
@@ -131,9 +136,9 @@ command will exit with "Deployment failed".
 
 Then, following the instructions below:
 
--   add the public ssh deploy key to GitLab so that Azure can access the
+1.  Add the public ssh deploy key to GitLab so that Azure can access the
     source code and
--   configure the web hook URL so that Azure is notified of changes
+2.  Configure the web hook in GitLab so that Azure is notified of changes
 
 Deploy key
 ~~~~~~~~~~
@@ -162,7 +167,7 @@ Web Hook
 
 Then browse to `GitLab repository → Settings → Integrations <https://
 gitlab.com/keith.maxwell/echo/settings/integrations>`__ and add the following
-URL:
+URL for "push events":
 
 .. code:: sh
 
@@ -180,8 +185,7 @@ You can also list the deployments with ``curl`` at the command line:
 .. code:: sh
 
     printf 'url https://$%s:%s@%s.scm.azurewebsites.net/api/deployments' \
-        $bot "$password" $bot |
-    curl -K - | jq .
+        $bot "$password" $bot | curl -K - | jq .
 
 Remove
 ------
