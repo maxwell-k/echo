@@ -41,7 +41,7 @@ names as "prototype-", entity type, "-", and then five random characters.
 If the last command shows that the storage account name is not available, run
 these commands again.
 
-The variables above must be configured before any of the subsequent steps.
+The environment variables above must be set before any of the subsequent steps.
 
 Register
 --------
@@ -86,7 +86,9 @@ service plan:
         --query '[].id|[0]' | tr -d '"'
     ) && echo $planId
 
-Deploy ``node.js-abs-webapp_hello-chatconnector`` from Microsoft:
+Deploy ``node.js-abs-webapp_hello-chatconnector`` from Microsoft, with the
+command below. First make sure ``parameters.json`` and ``template.json`` from
+this repository are available in the current directory.
 
 .. code:: sh
 
@@ -203,23 +205,22 @@ Visit https://apps.dev.microsoft.com/#/appList and delete the app.
 Other commands
 --------------
 
-To remove an existing deployment setup:
+To remove the existing deployment source:
 
 .. code:: sh
 
     az webapp deployment source delete \
         --name $bot --resource-group $resourceGroup
-    az webapp deployment source show \
-        --name $bot --resource-group $resourceGroup
 
-To show information about the deployment configuration:
+To show information about the current deployment source including the
+repository and branch:
 
 .. code:: sh
 
     az webapp deployment source show \
         --name $bot --resource-group $resourceGroup
 
-To understand the deployment history:
+To download the logs:
 
 .. code:: sh
 
