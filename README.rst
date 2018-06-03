@@ -131,10 +131,10 @@ command will exit with "Deployment failed".
 
     az webapp deployment source config \
         --name $bot --resource-group $resourceGroup \
-        --branch master \
-        --manual-integration \
+        --repository-type git \
         --repo-url git@gitlab.com:keith.maxwell/echo-private.git \
-        --repository-type git
+        --branch master \
+        --manual-integration
 
 Then, following the instructions below:
 
@@ -232,6 +232,13 @@ To get details about the app:
 
     az webapp show \
         --resource-group $resourceGroup --name $bot
+
+To trigger a re-deployment manually:
+
+.. code:: sh
+
+    az webapp deployment source sync \
+        --name $bot --resource-group $resourceGroup
 
 References
 ----------
